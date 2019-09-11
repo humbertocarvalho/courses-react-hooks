@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 function App() {
   const [techs, setTechs] = useState([]);
   const [tech, setTech] = useState('');
 
-  function handleAdd() {
+  // Evita que a funcao seja recriada toda vez que tiver alteração no DOM.
+  const handleAdd = useCallback(() => {
     setTechs([...techs, tech]);
     setTech('');
-  }
+  }, [tech, techs]);
 
   // Array vazio é uma vez só, como se fosse o componentDidMount
   useEffect(() => {
@@ -27,7 +28,8 @@ function App() {
     localStorage.setItem('techs', JSON.stringify(techs));
   }, [techs]);
 
-  const techSize = useMemo(() => techs.length, [techs.length]);
+  // Só irá disparar quando houver mudança do techs
+  const techSize = useMemo(() => techs.length, [techs]);
 
   return (
     <>
